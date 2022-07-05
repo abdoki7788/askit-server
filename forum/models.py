@@ -1,9 +1,10 @@
 from db_config import Base
 import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Text
+from sqlalchemy import Column, Integer, String, DateTime, Text, UniqueConstraint
 
 class Topic(Base):
     __tablename__ = "topic"
+    __table_args__ = (UniqueConstraint("title"),)
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255), nullable=False)
     content = Column(Text, nullable=False)
