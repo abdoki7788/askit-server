@@ -3,9 +3,10 @@ fastAPI backend for forum website
 
 ## installation
 
-first install python and create virtual enviroment
+first install python and create virtual enviroment and activate it
 ``` sh
 virtualenv .venv
+.venv/Scripts/activate.bat
 ```
 
 and then install requiements
