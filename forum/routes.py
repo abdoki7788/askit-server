@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Body, Depends
 from typing import List
 from sqlalchemy.orm import Session
 from . import crud, models, schemas
@@ -15,11 +15,11 @@ def get_db():
     finally:
         db.close()
 
-@routes.post("/topics/", response_model=schemas.TopicResponse, status_code=201)
+@routes.post("/topics", response_model=schemas.TopicResponse, status_code=201)
 def create_topic(topic: schemas.TopicCreate, db: Session = Depends(get_db)):
     return crud.create_topic(db=db, topic=topic)
 
-@routes.get("/topics/", response_model=List[schemas.TopicResponse], status_code=200)
+@routes.get("/topics", response_model=List[schemas.TopicResponse], status_code=200)
 def topics(db: Session = Depends(get_db)):
     return crud.get_topics(db=db)
 
@@ -30,6 +30,10 @@ def topics(topic_id: int, db: Session = Depends(get_db)):
 @routes.delete("/topics/{topic_id}", status_code=204)
 def delete_topic(topic_id: int, db: Session = Depends(get_db)):
     return crud.delete_topic(db=db, topic_id=topic_id)
+
+@routes.put("/topics/{topic_id}", status_code=200)
+def update_topic(topic_id: int, db: Session = Depends(get_db), topic: schemas.TopicUpdate = Body()):
+    return crud.update_topic(db=db, topic_id=topic_id, topic_schema=topic)
 
 @routes.patch("/topics/{topic_id}/voteup", status_code=200)
 def voteup_topic(topic_id: int, db: Session = Depends(get_db)):

@@ -20,3 +20,10 @@ class TopicCreate(BaseModel):
 
     class Config:
         orm_mode = True
+
+class TopicUpdate(BaseModel):
+    title: str
+    content: str
+
+    class Config:
+        orm_mode = True

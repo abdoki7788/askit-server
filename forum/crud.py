@@ -32,3 +32,11 @@ def votedown_topic(db: Session, topic_id: int):
     topic.votes -= 1
     db.commit()
     return topic.votes
+
+def update_topic(db: Session, topic_id: int, topic_schema: schemas.TopicUpdate):
+    topic = get_topic(db, topic_id)
+    topic.title = topic_schema.title
+    topic.content = topic_schema.content
+    topic.updated_at = datetime.datetime.now()
+    db.commit()
+    return get_topic(db, topic_id)
