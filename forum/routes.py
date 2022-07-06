@@ -42,3 +42,11 @@ def voteup_topic(topic_id: int, db: Session = Depends(get_db)):
 @routes.patch("/topics/{topic_id}/votedown", status_code=200)
 def votedown_topic(topic_id: int, db: Session = Depends(get_db)):
     return crud.votedown_topic(db=db, topic_id=topic_id)
+
+@routes.post("/topics/{topic_id}/answers", response_model=schemas.AnswerResponse, status_code=201)
+def create_answer(topic_id: int, answer: schemas.AnswerCreate, db: Session = Depends(get_db)):
+    return crud.create_answer(db=db, answer=answer, topic_id=topic_id)
+
+@routes.get("/topics/{topic_id}/answers", response_model=List[schemas.AnswerResponse], status_code=200)
+def topic_answers(topic_id: int, db: Session = Depends(get_db)):
+    return crud.get_answers(db=db, topic_id=topic_id)

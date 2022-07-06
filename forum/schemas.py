@@ -27,3 +27,23 @@ class TopicUpdate(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class AnswerResponse(BaseModel):
+    id: int
+    content: str
+    creator: str
+    votes: int
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+
+    class Config:
+        orm_mode = True
+
+
+class AnswerCreate(BaseModel):
+    content: str
+    creator: str
+
+    class Config:
+        orm_mode = True
