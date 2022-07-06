@@ -1,5 +1,5 @@
-from typing import List
-from pydantic import BaseModel
+from typing import List, Union
+from pydantic import BaseModel, PrivateAttr
 import datetime
 
 class AnswerResponse(BaseModel):
@@ -22,6 +22,18 @@ class TopicResponse(BaseModel):
     creator: str
     created_at: datetime.datetime
     updated_at: datetime.datetime
+
+    class Config:
+        orm_mode = True
+
+class TopicListResponse(BaseModel):
+    id: int
+    title: str
+    content: str
+    votes: int
+    creator: str
+    created_at: datetime.datetime
+    answers_count: int
 
     class Config:
         orm_mode = True

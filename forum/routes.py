@@ -19,12 +19,12 @@ def get_db():
 def create_topic(topic: schemas.TopicCreate, db: Session = Depends(get_db)):
     return crud.create_topic(db=db, topic=topic)
 
-@routes.get("/topics", response_model=List[schemas.TopicResponse], status_code=200)
+@routes.get("/topics", response_model=List[schemas.TopicListResponse], status_code=200)
 def topics(db: Session = Depends(get_db)):
     return crud.get_topics(db=db)
 
 @routes.get("/topics/{topic_id}", response_model=schemas.TopicResponse, status_code=200)
-def topics(topic_id: int, db: Session = Depends(get_db)):
+def topic(topic_id: int, db: Session = Depends(get_db)):
     return crud.get_topic(db=db, topic_id=topic_id)
 
 @routes.delete("/topics/{topic_id}", status_code=204)
