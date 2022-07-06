@@ -1,8 +1,12 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from forum.routes import routes as forum_routes
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 origins = [
     "http://localhost:3000",
@@ -21,3 +25,7 @@ app.add_middleware(
 )
 
 app.include_router(forum_routes)
+
+@app.get("/favicon.ico")
+async def favicon():
+    return RedirectResponse("/static/favicon.png")
