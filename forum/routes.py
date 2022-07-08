@@ -1,19 +1,10 @@
 from fastapi import APIRouter, Body, Depends
 from typing import List
 from sqlalchemy.orm import Session
-from . import crud, models, schemas
-from db_config import SessionLocal, engine
-
+from . import crud, schemas
+from db_config import get_db
 
 routes = APIRouter()
-models.Base.metadata.create_all(bind=engine)
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @routes.post("/topics", response_model=schemas.TopicResponse, status_code=201)
 def create_topic(topic: schemas.TopicCreate, db: Session = Depends(get_db)):
