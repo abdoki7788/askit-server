@@ -10,7 +10,7 @@ import settings
 
 routes = APIRouter()
 
-@routes.get("/users/me")
+@routes.get("/users/me", response_model=schemas.UserResponse)
 async def read_users_me(current_user: schemas.UserCreate = Depends(dependencies.get_current_user)):
     return current_user
 

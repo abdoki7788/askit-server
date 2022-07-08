@@ -1,4 +1,3 @@
-from fastapi import Depends
 from typing import Union
 from jose import jwt
 from sqlalchemy.orm import Session
@@ -20,7 +19,6 @@ def authenticate_user(username: str, password: str, db: Session):
     user = crud.get_user_by_username(db, username=username)
     if not user:
         return False
-    print(password, user.hashed_password)
     if not verify_password(password, user.hashed_password):
         return False
     return user
