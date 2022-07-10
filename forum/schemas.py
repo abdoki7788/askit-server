@@ -34,7 +34,6 @@ class TopicListResponse(BaseModel):
     votes: int
     creator: UserResponse
     created_at: datetime.datetime
-    answers_count: int
 
     class Config:
         orm_mode = True

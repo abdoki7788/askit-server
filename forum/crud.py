@@ -6,7 +6,7 @@ def get_topic(db: Session, topic_id: int):
     return db.query(models.Topic).get(topic_id)
 
 def get_topics(db: Session):
-    return [{**i.__dict__, "answers_count": len(i.answers)} for i in list(db.query(models.Topic).all())]
+    return db.query(models.Topic).all()
 
 def create_topic(db: Session, topic: schemas.TopicCreate, user_id: int):
     db_topic = models.Topic(**topic.dict(), updated_at=datetime.datetime.now(), creator_id=user_id)
