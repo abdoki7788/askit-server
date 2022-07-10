@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from forum.routes import routes as forum_routes
 from auth.routes import routes as auth_routes
+from tags.routes import routes as tags_routes
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import uvicorn
@@ -31,6 +32,7 @@ app.add_middleware(
 
 app.include_router(forum_routes)
 app.include_router(auth_routes)
+app.include_router(tags_routes)
 
 @app.get("/favicon.ico")
 def favicon():

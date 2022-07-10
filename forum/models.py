@@ -1,4 +1,5 @@
 from db_config import Base
+from tags.models import association_table
 import datetime
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Text, UniqueConstraint, ForeignKey
 from sqlalchemy.orm import relationship, validates
@@ -23,6 +24,9 @@ class Topic(Base):
     content = Column(Text, nullable=False)
     votes = Column(Integer, default=0)
     creator_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    tags = relationship(
+        "Tag", secondary=association_table, back_populates="topics"
+    )
     creator = relationship("User", back_populates="topics")
     answers = relationship("Answer", back_populates="topic", cascade="all, delete")
     created_at = Column(DateTime, nullable=False, default=datetime.datetime.now)
