@@ -1,3 +1,4 @@
+import re
 from typing import Union
 from jose import jwt
 from sqlalchemy.orm import Session
@@ -13,7 +14,10 @@ def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
 def get_password_hash(password):
-    return pwd_context.hash(password)
+    if re.fullmatch(r"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()]).{6, 20}$", password):
+        return pwd_context.hash(password)
+    else:
+        raise ValueError('Password must be at least 6 characters long and contain at least one number, one uppercase letter, one lowercase letter, one special character and one of the following: @#$%^&-+=()')
 
 def authenticate_user(username: str, password: str, db: Session):
     user = crud.get_user_by_username(db, username=username)
