@@ -12,9 +12,9 @@ def get_tags(db: Session = Depends(get_db)):
     return crud.get_tags(db=db)
 
 @routes.get("/{tag_id}", status_code=200, response_model=schemas.TagResponse)
-def get_tags(tag_id: int, db: Session = Depends(get_db)):
+def get_tag(tag_id: int, db: Session = Depends(get_db)):
     return crud.get_tag(db=db, tag_id=tag_id)
 
 @routes.get("/{tag_id}/topics", status_code=200, response_model=List[TopicListResponse])
-def get_tags(tag_id: int, db: Session = Depends(get_db)):
+def get_tag_topics(tag_id: int, db: Session = Depends(get_db)):
     return crud.get_tag_topics(db=db, tag_id=tag_id)
