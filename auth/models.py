@@ -12,6 +12,7 @@ class User(Base):
     disabled = Column(Boolean, default=False)
     hashed_password = Column(String, nullable=False)
     topics = relationship("Topic", back_populates="creator")
+    answers = relationship("Answer", back_populates="creator")
 
     @validates('username')
     def validate_username(self, key, username):

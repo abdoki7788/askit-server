@@ -7,7 +7,8 @@ class Answer(Base):
     __tablename__ = "answers"
     id = Column(Integer, primary_key=True, index=True)
     content = Column(Text, nullable=False)
-    creator = Column(String, nullable=False)
+    creator_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    creator = relationship("User", back_populates="answers")
     votes = Column(Integer, nullable=False, default=0)
     topic_id = Column(Integer, ForeignKey('topics.id'))
     topic = relationship("Topic", back_populates="answers")

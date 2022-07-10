@@ -49,7 +49,7 @@ class TopicCreate(BaseModel):
 
 class AnswerCreate(BaseModel):
     content: str
-    creator: UserResponse
+    creator_id: int
 
     class Config:
         orm_mode = True
