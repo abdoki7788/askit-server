@@ -1,11 +1,12 @@
 from typing import List, Union
 from pydantic import BaseModel, PrivateAttr
 import datetime
+from auth.schemas import UserResponse
 
 class AnswerResponse(BaseModel):
     id: int
     content: str
-    creator: str
+    creator: UserResponse
     votes: int
     created_at: datetime.datetime
     updated_at: datetime.datetime
@@ -19,7 +20,7 @@ class TopicResponse(BaseModel):
     content: str
     votes: int
     answers: List[AnswerResponse]
-    creator: str
+    creator: UserResponse
     created_at: datetime.datetime
     updated_at: datetime.datetime
 
@@ -31,7 +32,7 @@ class TopicListResponse(BaseModel):
     title: str
     content: str
     votes: int
-    creator: str
+    creator: UserResponse
     created_at: datetime.datetime
     answers_count: int
 
@@ -41,14 +42,14 @@ class TopicListResponse(BaseModel):
 class TopicCreate(BaseModel):
     title: str
     content: str
-    creator: str
+    creator_id: int
 
     class Config:
         orm_mode = True
 
 class AnswerCreate(BaseModel):
     content: str
-    creator: str
+    creator: UserResponse
 
     class Config:
         orm_mode = True

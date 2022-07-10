@@ -1,7 +1,7 @@
 from db_config import Base
 import datetime
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Text, UniqueConstraint, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, validates
 
 class Answer(Base):
     __tablename__ = "answers"
@@ -21,11 +21,8 @@ class Topic(Base):
     title = Column(String(255), nullable=False)
     content = Column(Text, nullable=False)
     votes = Column(Integer, default=0)
-    creator = Column(String)
+    creator_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    creator = relationship("User", back_populates="topics")
     answers = relationship("Answer", back_populates="topic", cascade="all, delete")
-    created_at = Column(DateTime, nullable=False)
-    updated_at = Column(DateTime, nullable=False)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.created_at = datetime.datetime.now()
+    created_at = Column(DateTime, nullable=False, default=datetime.datetime.now)
+    updated_at = Column(DateTime, nullable=False, default=datetime.datetime.now)

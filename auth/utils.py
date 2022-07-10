@@ -14,7 +14,8 @@ def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
 def get_password_hash(password):
-    if re.fullmatch(r"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()]).{6, 20}$", password):
+    regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+    if re.fullmatch(regex, password):
         return pwd_context.hash(password)
     else:
         raise ValueError('Password must be at least 6 characters long and contain at least one number, one uppercase letter, one lowercase letter, one special character and one of the following: @#$%^&-+=()')

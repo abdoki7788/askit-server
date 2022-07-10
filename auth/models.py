@@ -1,7 +1,7 @@
 from db_config import Base
 import re
 from sqlalchemy import Column, Integer, String, Boolean
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
 
 class User(Base):
     __tablename__ = 'users'
@@ -11,6 +11,7 @@ class User(Base):
     full_name = Column(String, nullable=True)
     disabled = Column(Boolean, default=False)
     hashed_password = Column(String, nullable=False)
+    topics = relationship("Topic", back_populates="creator")
 
     @validates('username')
     def validate_username(self, key, username):
@@ -29,3 +30,6 @@ class User(Base):
         if re.fullmatch(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email) is None:
             raise ValueError('Email must be a valid email address.')
         return email
+    
+    def __str__(self) -> str:
+        return super().__str__() + f"({self.username})"
