@@ -42,14 +42,12 @@ class TopicListResponse(BaseModel):
 class TopicCreate(BaseModel):
     title: str
     content: str
-    creator_id: int
 
     class Config:
         orm_mode = True
 
 class AnswerCreate(BaseModel):
     content: str
-    creator_id: int
 
     class Config:
         orm_mode = True

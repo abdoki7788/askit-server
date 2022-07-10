@@ -8,8 +8,8 @@ def get_topic(db: Session, topic_id: int):
 def get_topics(db: Session):
     return [{**i.__dict__, "answers_count": len(i.answers)} for i in list(db.query(models.Topic).all())]
 
-def create_topic(db: Session, topic: schemas.TopicCreate):
-    db_topic = models.Topic(**topic.dict(), updated_at=datetime.datetime.now())
+def create_topic(db: Session, topic: schemas.TopicCreate, user_id: int):
+    db_topic = models.Topic(**topic.dict(), updated_at=datetime.datetime.now(), creator_id=user_id)
     db.add(db_topic)
     db.commit()
     db.refresh(db_topic)

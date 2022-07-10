@@ -1,15 +1,18 @@
 from fastapi import APIRouter, Body, Depends
 from typing import List
 from sqlalchemy.orm import Session
+from jose import jwt
 from . import crud, schemas
 from auth.dependencies import oauth2_scheme
 from db_config import get_db
+import settings
 
 routes = APIRouter(prefix="/topics")
 
 @routes.post("", response_model=schemas.TopicResponse, status_code=201)
 def create_topic(topic: schemas.TopicCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    return crud.create_topic(db=db, topic=topic)
+    user_id = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])["sub"]
+    return crud.create_topic(db=db, topic=topic, user_id=user_id)
 
 @routes.get("", response_model=List[schemas.TopicListResponse], status_code=200)
 def topics(db: Session = Depends(get_db)):
