@@ -20,5 +20,9 @@ def create_user(db: Session, user: schemas.UserCreate):
     except ValueError as e:
         db.rollback()
         raise HTTPException(detail=str(e), status_code=400)
+    except Exception as e:
+        db.rollback()
+        print(e)
+        raise HTTPException(detail="something wrong", status_code=500)
     db.refresh(db_user)
     return db_user
