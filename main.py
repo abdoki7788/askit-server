@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 import uvicorn
 from db_config import engine, Base
 
-app = FastAPI()
+app = FastAPI(version="1.0.0", title="Forum API", description="A simple forum API")
 
 Base.metadata.create_all(bind=engine)
 
