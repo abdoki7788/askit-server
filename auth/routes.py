@@ -8,13 +8,13 @@ from auth import schemas, crud, dependencies, utils
 from db_config import get_db
 import settings
 
-routes = APIRouter()
+routes = APIRouter(prefix="/auth")
 
 @routes.get("/users/me", response_model=schemas.UserResponse)
 async def read_users_me(current_user: schemas.UserCreate = Depends(dependencies.get_current_user)):
     return current_user
 
-@routes.get('/users', response_model=List[schemas.UserResponse])
+@routes.get("/users", response_model=List[schemas.UserResponse])
 async def read_users(db: Session = Depends(get_db)):
     return crud.get_users(db)
 
