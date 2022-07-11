@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from . import models, schemas
+from tags.crud import get_or_create_tag
 import datetime
 
 def get_topic(db: Session, topic_id: int):
@@ -14,7 +15,10 @@ def get_topics(db: Session):
     return db.query(models.Topic).all()
 
 def create_topic(db: Session, topic: schemas.TopicCreate, user_id: int):
-    db_topic = models.Topic(**topic.dict(), updated_at=datetime.datetime.now(), creator_id=user_id)
+    data = topic.dict()
+    print(data)
+    data["tags"] = [get_or_create_tag(db, i) for i in topic.tags]
+    db_topic = models.Topic(**data, updated_at=datetime.datetime.now(), creator_id=user_id)
     db.add(db_topic)
     db.commit()
     db.refresh(db_topic)

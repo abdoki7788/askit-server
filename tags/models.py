@@ -13,7 +13,7 @@ association_table = Table(
 class Tag(Base):
     __tablename__ = "tags"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255), nullable=False)
+    name = Column(String(255), nullable=False, unique=True)
     topics = relationship(
         "Topic", secondary=association_table, back_populates="tags"
     )

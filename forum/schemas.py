@@ -24,12 +24,12 @@ class AnswerResponse(BaseModel):
     class Config:
         orm_mode = True
 
-from tags.schemas import TagResponse
+from tags.schemas import TagListResponse, TagResponse
 
 class TopicResponse(TopicBase):
     id: int
     votes: int
-    tags: List[TagResponse]
+    tags: List[TagListResponse]
     answers: List[AnswerResponse]
     creator: UserResponse
     created_at: datetime.datetime
@@ -49,7 +49,7 @@ class TopicListResponse(TopicBase):
         orm_mode = True
 
 class TopicCreate(TopicBase):
-
+    tags: List[str]
     class Config:
         orm_mode = True
 

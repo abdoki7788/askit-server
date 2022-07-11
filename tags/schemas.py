@@ -17,3 +17,9 @@ class TagResponse(TagBase):
 
     class Config:
         orm_mode = True
+
+class TagCreate(BaseModel):
+    name: str
+
+    class Congig:
+        orm_mode = True
