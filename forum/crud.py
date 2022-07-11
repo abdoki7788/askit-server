@@ -67,3 +67,18 @@ def create_answer(db: Session, answer: schemas.AnswerCreate, topic_id: int, crea
     db.commit()
     db.refresh(db_answer)
     return db_answer
+
+def voteup_answer(db: Session, answer_id: int, user):
+    answer = get_answer(db, answer_id)
+    answer.votes.append(user)
+    db.commit()
+    return answer.votes
+
+def votedown_answer(db: Session, answer_id: int, user):
+    answer = get_answer(db, answer_id)
+    if user in answer.votes:
+        answer.votes.remove(user)
+    else:
+        raise HTTPException(status_code=400, detail="User has not voted for this answer")
+    db.commit()
+    return answer.votes

@@ -48,3 +48,15 @@ def create_answer(topic_id: int, answer: schemas.AnswerCreate, db: Session = Dep
 @routes.get("/{topic_id}/answers", response_model=List[schemas.AnswerResponse], status_code=200)
 def topic_answers(topic_id: int, db: Session = Depends(get_db)):
     return crud.get_answers(db=db, topic_id=topic_id)
+
+@routes.get("/{topic_id}/answers/{answer_id}", response_model=schemas.AnswerResponse, status_code=200)
+def topic_answers(topic_id: int, answer_id: int, db: Session = Depends(get_db)):
+    return crud.get_answer(db=db, answer_id=answer_id)
+
+@routes.patch("/{topic_id}/answers/{answer_id}/voteup", status_code=200)
+def voteup_topic(topic_id: int, answer_id, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):
+    return crud.voteup_answer(db=db, answer_id=answer_id, user=current_user)
+
+@routes.patch("/{topic_id}/answers/{answer_id}/votedown", status_code=200)
+def votedown_topic(topic_id: int, answer_id, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):
+    return crud.votedown_answer(db=db, answer_id=answer_id, user=current_user)
