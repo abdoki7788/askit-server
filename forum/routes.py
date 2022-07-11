@@ -49,7 +49,7 @@ def create_answer(topic_id: int, answer: schemas.AnswerCreate, db: Session = Dep
 def topic_answers(topic_id: int, db: Session = Depends(get_db)):
     return crud.get_answers(db=db, topic_id=topic_id)
 
-@routes.get("/{topic_id}/answers/{answer_id}", response_model=schemas.AnswerResponse, status_code=200)
+@routes.get("/{topic_id}/answers/{answer_id}", response_model=List[schemas.AnswerResponse], status_code=200)
 def topic_answers(topic_id: int, answer_id: int, db: Session = Depends(get_db)):
     return crud.get_answer(db=db, answer_id=answer_id)
 
