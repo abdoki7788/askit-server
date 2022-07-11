@@ -34,12 +34,12 @@ def update_topic(topic_id: int, db: Session = Depends(get_db), topic: schemas.To
         raise HTTPException(status_code=400, detail="You are not the creator of this topic")
 
 @routes.patch("/{topic_id}/voteup", status_code=200)
-def voteup_topic(topic_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    return crud.voteup_topic(db=db, topic_id=topic_id)
+def voteup_topic(topic_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):
+    return crud.voteup_topic(db=db, topic_id=topic_id, user=current_user)
 
 @routes.patch("/{topic_id}/votedown", status_code=200)
-def votedown_topic(topic_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    return crud.votedown_topic(db=db, topic_id=topic_id)
+def votedown_topic(topic_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):
+    return crud.votedown_topic(db=db, topic_id=topic_id, user=current_user)
 
 @routes.post("/{topic_id}/answers", response_model=schemas.AnswerResponse, status_code=201)
 def create_answer(topic_id: int, answer: schemas.AnswerCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):

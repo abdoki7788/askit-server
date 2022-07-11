@@ -1,8 +1,15 @@
 from db_config import Base
 from tags.models import association_table
 import datetime
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Text, UniqueConstraint, ForeignKey
-from sqlalchemy.orm import relationship, validates
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Text, UniqueConstraint, ForeignKey, Table
+from sqlalchemy.orm import relationship
+
+associate_votes = Table(
+    "topics_votes",
+    Base.metadata,
+    Column("topics_id", ForeignKey("topics.id")),
+    Column("users_id", ForeignKey("users.id")),
+)
 
 class Answer(Base):
     __tablename__ = "answers"
@@ -22,7 +29,7 @@ class Topic(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255), nullable=False)
     content = Column(Text, nullable=False)
-    votes = Column(Integer, default=0)
+    votes = relationship("User", secondary=associate_votes)
     creator_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     tags = relationship(
         "Tag", secondary=association_table, back_populates="topics"

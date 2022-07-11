@@ -10,7 +10,7 @@ class TopicBase(BaseModel):
 class TopicResponseInTag(TopicBase):
     id: int
     creator: UserResponse
-    votes: int
+    votes: List[UserResponse]
     created_at: datetime.datetime
 
     class Config:
@@ -20,7 +20,7 @@ class AnswerResponse(BaseModel):
     id: int
     content: str
     creator: UserResponse
-    votes: int
+    votes: List[UserResponse]
     created_at: datetime.datetime
     updated_at: datetime.datetime
 
@@ -31,7 +31,7 @@ from tags.schemas import TagListResponse
 
 class TopicResponse(TopicBase):
     id: int
-    votes: int
+    votes: List[UserResponse]
     tags: List[TagListResponse]
     answers: List[AnswerResponse]
     creator: UserResponse
@@ -43,7 +43,7 @@ class TopicResponse(TopicBase):
 
 class TopicListResponse(TopicBase):
     id: int
-    votes: int
+    votes: List[UserResponse]
     tags: List[TagListResponse]
     creator: UserResponse
     created_at: datetime.datetime

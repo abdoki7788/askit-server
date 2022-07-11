@@ -30,15 +30,18 @@ def delete_topic(db: Session, topic_id: int):
     db.commit()
     return topic
 
-def voteup_topic(db: Session, topic_id: int):
+def voteup_topic(db: Session, topic_id: int, user):
     topic = get_topic(db, topic_id)
-    topic.votes += 1
+    topic.votes.append(user)
     db.commit()
     return topic.votes
 
-def votedown_topic(db: Session, topic_id: int):
+def votedown_topic(db: Session, topic_id: int, user):
     topic = get_topic(db, topic_id)
-    topic.votes -= 1
+    if user in topic.votes:
+        topic.votes.remove(user)
+    else:
+        raise HTTPException(status_code=400, detail="User has not voted for this topic")
     db.commit()
     return topic.votes
 
