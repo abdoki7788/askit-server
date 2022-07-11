@@ -28,4 +28,4 @@ def get_tag(db: Session, tag_id: int):
     return db.query(models.Tag).get(tag_id)
 
 def get_tag_topics(db: Session, tag_id: int):
-    return db.query(models.Tag).get(tag_id).topics
+    return get_tag(db=db, tag_id=tag_id).topics
