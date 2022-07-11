@@ -54,8 +54,8 @@ def get_answer(db: Session, answer_id: int):
 def get_answers(db: Session, topic_id: int):
     return db.query(models.Topic).get(topic_id).answers
 
-def create_answer(db: Session, answer: schemas.AnswerCreate, topic_id: int):
-    db_answer = models.Answer(**answer.dict(), updated_at=datetime.datetime.now(), topic_id=topic_id)
+def create_answer(db: Session, answer: schemas.AnswerCreate, topic_id: int, creator_id: int):
+    db_answer = models.Answer(**answer.dict(), updated_at=datetime.datetime.now(), topic_id=topic_id, creator_id=creator_id)
     db.add(db_answer)
     db.commit()
     db.refresh(db_answer)
