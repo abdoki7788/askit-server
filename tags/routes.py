@@ -7,7 +7,7 @@ from forum.schemas import TopicListResponse
 
 routes = APIRouter(prefix="/tags")
 
-@routes.get("/", status_code=200, response_model=List[schemas.TagResponse])
+@routes.get("/", status_code=200, response_model=List[schemas.TagListResponse])
 def get_tags(db: Session = Depends(get_db)):
     return crud.get_tags(db=db)
 

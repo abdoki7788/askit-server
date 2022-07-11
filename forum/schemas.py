@@ -3,6 +3,16 @@ from pydantic import BaseModel, PrivateAttr
 import datetime
 from auth.schemas import UserResponse
 
+class TopicBase(BaseModel):
+    title: str
+    content: str
+
+class TopicResponseInTag(TopicBase):
+    id: int
+    creator: UserResponse
+    votes: int
+    created_at: datetime.datetime
+
 class AnswerResponse(BaseModel):
     id: int
     content: str
@@ -14,11 +24,12 @@ class AnswerResponse(BaseModel):
     class Config:
         orm_mode = True
 
-class TopicResponse(BaseModel):
+from tags.schemas import TagResponse
+
+class TopicResponse(TopicBase):
     id: int
-    title: str
-    content: str
     votes: int
+    tags: List[TagResponse]
     answers: List[AnswerResponse]
     creator: UserResponse
     created_at: datetime.datetime
@@ -27,20 +38,17 @@ class TopicResponse(BaseModel):
     class Config:
         orm_mode = True
 
-class TopicListResponse(BaseModel):
+class TopicListResponse(TopicBase):
     id: int
-    title: str
-    content: str
     votes: int
+    tags: List[TagResponse]
     creator: UserResponse
     created_at: datetime.datetime
 
     class Config:
         orm_mode = True
 
-class TopicCreate(BaseModel):
-    title: str
-    content: str
+class TopicCreate(TopicBase):
 
     class Config:
         orm_mode = True
@@ -51,9 +59,7 @@ class AnswerCreate(BaseModel):
     class Config:
         orm_mode = True
 
-class TopicUpdate(BaseModel):
-    title: str
-    content: str
+class TopicUpdate(TopicBase):
 
     class Config:
         orm_mode = True
