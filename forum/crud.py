@@ -1,9 +1,14 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from . import models, schemas
 import datetime
 
 def get_topic(db: Session, topic_id: int):
-    return db.query(models.Topic).get(topic_id)
+    data = db.query(models.Topic).get(topic_id)
+    if data is not None:
+        return data
+    else:
+        raise HTTPException(status_code=404, detail="Topic not found")
 
 def get_topics(db: Session):
     return db.query(models.Topic).all()
