@@ -49,6 +49,10 @@ def add_favorite_topic(topic_id: int, db: Session = Depends(get_db), token: str 
 def remove_favorite_topic(topic_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):
     return crud.remove_favorite_topic(db=db, topic_id=topic_id, user=current_user)
 
+@routes.get("/{topic_id}/is-favorite", status_code=200)
+def is_favorite_topic(topic_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):
+    return crud.is_favorite_topic(db=db, topic_id=topic_id, user=current_user)
+
 @routes.post("/{topic_id}/answers", response_model=schemas.AnswerResponse, status_code=201)
 def create_answer(topic_id: int, answer: schemas.AnswerCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):
     return crud.create_answer(db=db, answer=answer, topic_id=topic_id, creator_id=current_user.id)

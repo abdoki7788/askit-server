@@ -72,6 +72,10 @@ def remove_favorite_topic(db: Session, topic_id: int, user):
     db.commit()
     return user.favorites
 
+def is_favorite_topic(db: Session, topic_id: int, user):
+    topic = get_topic(db, topic_id)
+    return topic in user.favorites
+
 # Answer crud functions
 def get_answer(db: Session, answer_id: int):
     return db.query(models.Answer).get(answer_id)
