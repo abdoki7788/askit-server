@@ -42,6 +42,14 @@ async def unfollow_user(username: str, db: Session = Depends(get_db), current_us
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
+@routes.get("/users/{username}/isfollowed")
+async def is_followed(username: str, db: Session = Depends(get_db), current_user: schemas.UserCreate = Depends(dependencies.get_current_user)):
+    data = crud.is_followed(db, username, current_user.username)
+    if data is not None:
+        return data
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
 @routes.post("/users", response_model=schemas.UserResponse, status_code=status.HTTP_201_CREATED)
 async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)

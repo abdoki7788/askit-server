@@ -55,3 +55,10 @@ def unfollow_user(db: Session, username: str, unfollower_username: str):
     db.commit()
     db.refresh(db_user)
     return db_user.followers
+
+def is_followed(db: Session, username: str, follower_username: str):
+    db_user = get_user_by_username(db, username)
+    db_follower = get_user_by_username(db, follower_username)
+    if db_user is None:
+        return None
+    return db_follower in db_user.followers
