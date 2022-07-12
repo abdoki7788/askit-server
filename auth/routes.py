@@ -11,12 +11,36 @@ import settings
 routes = APIRouter(prefix="/auth")
 
 @routes.get("/users/me", response_model=schemas.UserResponse)
-async def read_users_me(current_user: schemas.UserCreate = Depends(dependencies.get_current_user)):
+async def get_users_me(current_user: schemas.UserCreate = Depends(dependencies.get_current_user)):
     return current_user
 
-@routes.get("/users", response_model=List[schemas.UserResponse])
-async def read_users(db: Session = Depends(get_db)):
+@routes.get("/users", response_model=List[schemas.UserProfile])
+async def get_users(db: Session = Depends(get_db)):
     return crud.get_users(db)
+
+@routes.get("/users/{username}", response_model=schemas.UserProfile)
+async def get_user(username: str, db: Session = Depends(get_db)):
+    data = crud.get_user_by_username(db, username)
+    if data is not None:
+        return data
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+@routes.patch("/users/{username}/follow", response_model=List[schemas.UserResponse])
+async def follow_user(username: str, db: Session = Depends(get_db), current_user: schemas.UserCreate = Depends(dependencies.get_current_user)):
+    data = crud.follow_user(db, username, current_user.username)
+    if data is not None:
+        return data
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+@routes.patch("/users/{username}/unfollow", response_model=List[schemas.UserResponse])
+async def unfollow_user(username: str, db: Session = Depends(get_db), current_user: schemas.UserCreate = Depends(dependencies.get_current_user)):
+    data = crud.unfollow_user(db, username, current_user.username)
+    if data is not None:
+        return data
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
 @routes.post("/users", response_model=schemas.UserResponse, status_code=status.HTTP_201_CREATED)
 async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):

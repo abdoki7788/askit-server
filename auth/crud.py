@@ -29,3 +29,29 @@ def create_user(db: Session, user: schemas.UserCreate):
         raise HTTPException(detail="something wrong", status_code=500)
     db.refresh(db_user)
     return db_user
+
+def follow_user(db: Session, username: str, follower_username: str):
+    db_user = get_user_by_username(db, username)
+    db_follower = get_user_by_username(db, follower_username)
+    if db_user is None:
+        return None
+    if db_follower not in db_user.followers:
+        db_user.followers.append(db_follower)
+    else:
+        raise HTTPException(detail="User is already following", status_code=400)
+    db.commit()
+    db.refresh(db_user)
+    return db_user.followers
+
+def unfollow_user(db: Session, username: str, unfollower_username: str):
+    db_user = get_user_by_username(db, username)
+    db_unfollower = get_user_by_username(db, unfollower_username)
+    if db_user is None:
+        return None
+    if db_unfollower in db_user.followers:
+        db_user.followers.remove(db_unfollower)
+    else:
+        raise HTTPException(detail="User is not following", status_code=400)
+    db.commit()
+    db.refresh(db_user)
+    return db_user.followers

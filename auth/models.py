@@ -1,7 +1,15 @@
 from db_config import Base
 import re
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, Table, ForeignKey
 from sqlalchemy.orm import validates, relationship
+
+associate_followers = Table(
+    "user_follow",
+    Base.metadata,
+    Column("user_id", Integer, ForeignKey("users.id"), primary_key=True),
+    Column("following_id", Integer, ForeignKey("users.id"), primary_key=True),
+)
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -13,6 +21,14 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     topics = relationship("Topic", back_populates="creator")
     answers = relationship("Answer", back_populates="creator")
+    following = relationship(
+        "User",
+        lambda: associate_followers,
+        primaryjoin=lambda: User.id == associate_followers.c.user_id,
+        secondaryjoin=lambda: User.id == associate_followers.c.following_id,
+        backref="followers",
+    )
+    about = Column(String, nullable=True)
 
     @validates('username')
     def validate_username(self, key, username):
@@ -31,6 +47,12 @@ class User(Base):
         if re.fullmatch(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email) is None:
             raise ValueError('Email must be a valid email address.')
         return email
+    
+    @validates('about')
+    def validate_about(self, key, about):
+        if re.fullmatch(r"^[a-zA-Z0-9_.+-]{3,100}$", about) is None:
+            raise ValueError('About must be at least 3 characters long and contain only letters, numbers, underscores, and dashes.')
+        return about
     
     def __str__(self) -> str:
         return super().__str__() + f"({self.username})"

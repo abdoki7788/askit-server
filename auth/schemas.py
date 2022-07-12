@@ -1,14 +1,22 @@
-from typing import Union
+from typing import List, Union
 from pydantic import BaseModel
 
 class User(BaseModel):
     username: str
     email: Union[str, None] = None
     full_name: Union[str, None] = None
-    disabled: bool = False
+    about: Union[str, None] = None
 
 class UserResponse(User):
     id: int
+
+    class Config:
+        orm_mode = True
+
+class UserProfile(User):
+    id: int
+    followers: List[UserResponse]
+    following: List[UserResponse]
 
     class Config:
         orm_mode = True
