@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from . import models, schemas
+from auth import crud as auth_crud
 from tags.crud import get_or_create_tag
 import datetime
 
@@ -53,6 +54,23 @@ def update_topic(db: Session, topic_id: int, topic_schema: schemas.TopicUpdate):
     db.commit()
     return get_topic(db, topic_id)
 
+def add_favorite_topic(db: Session, topic_id: int, user):
+    topic = get_topic(db, topic_id)
+    if topic not in user.favorites:
+        user.favorites.append(topic)
+    else:
+        raise HTTPException(status_code=400, detail="User has already favorited this topic")
+    db.commit()
+    return user.favorites
+
+def remove_favorite_topic(db: Session, topic_id: int, user):
+    topic = get_topic(db, topic_id)
+    if topic in user.favorites:
+        user.favorites.remove(topic)
+    else:
+        raise HTTPException(status_code=400, detail="User has not favorited this topic")
+    db.commit()
+    return user.favorites
 
 # Answer crud functions
 def get_answer(db: Session, answer_id: int):

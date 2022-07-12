@@ -3,6 +3,8 @@ import re
 from sqlalchemy import Column, Integer, String, Boolean, Table, ForeignKey
 from sqlalchemy.orm import validates, relationship
 
+from forum.models import Topic
+
 associate_followers = Table(
     "user_follow",
     Base.metadata,
@@ -10,6 +12,12 @@ associate_followers = Table(
     Column("following_id", Integer, ForeignKey("users.id"), primary_key=True),
 )
 
+associate_favorites = Table(
+    "user_favorite",
+    Base.metadata,
+    Column("user_id", Integer, ForeignKey("users.id"), primary_key=True),
+    Column("favorite_id", Integer, ForeignKey("topics.id"), primary_key=True),
+)
 
 class User(Base):
     __tablename__ = 'users'
@@ -27,6 +35,12 @@ class User(Base):
         primaryjoin=lambda: User.id == associate_followers.c.user_id,
         secondaryjoin=lambda: User.id == associate_followers.c.following_id,
         backref="followers",
+    )
+    favorites = relationship(
+        "Topic",
+        lambda: associate_favorites,
+        primaryjoin=lambda: User.id == associate_favorites.c.user_id,
+        secondaryjoin=lambda: Topic.id == associate_favorites.c.favorite_id,
     )
     about = Column(String, nullable=True)
 

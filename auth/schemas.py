@@ -21,6 +21,13 @@ class UserProfile(User):
     class Config:
         orm_mode = True
 
+from forum.schemas import TopicInProfile
+
+class UserMe(UserProfile):
+    favorites: List[TopicInProfile]
+    class Config:
+        orm_mode = True
+
 class UserCreate(BaseModel):
     username: str
     password: str

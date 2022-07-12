@@ -1,11 +1,20 @@
 from typing import List, Union
 from pydantic import BaseModel, PrivateAttr
 import datetime
-from auth.schemas import UserResponse
 
 class TopicBase(BaseModel):
     title: str
     content: str
+
+class TopicInProfile(TopicBase):
+    id: int
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+    tags: List
+    class Config:
+        orm_mode = True
+
+from auth.schemas import UserResponse
 
 class TopicResponseInTag(TopicBase):
     id: int
