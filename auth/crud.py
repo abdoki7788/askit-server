@@ -12,6 +12,17 @@ def get_user_by_id(db: Session, id: str):
 def get_users(db: Session):
     return db.query(models.User).all()
 
+def update_user_me(db: Session, user, user_in: schemas.UserUpdate):
+    if user_in.email is not None:
+        user.email = user_in.email
+    if user_in.full_name is not None:
+        user.full_name = user_in.full_name
+    if user_in.about is not None:
+        user.about = user_in.about
+    db.commit()
+    db.refresh(user)
+    return user
+
 def create_user(db: Session, user: schemas.UserCreate):
     try:
         db_user = models.User(username=user.username, hashed_password=utils.get_password_hash(user.password))

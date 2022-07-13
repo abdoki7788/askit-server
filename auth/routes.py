@@ -10,6 +10,13 @@ import settings
 
 routes = APIRouter(prefix="/auth")
 
+@routes.put("/users/me", response_model=schemas.UserMe)
+async def update_users_me(body: schemas.UserUpdate, current_user: schemas.UserCreate = Depends(dependencies.get_current_user), db: Session = Depends(get_db)):
+    try:
+        return crud.update_user_me(db=db, user=current_user, user_in=body)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
 @routes.get("/users/me", response_model=schemas.UserMe)
 async def get_users_me(current_user: schemas.UserCreate = Depends(dependencies.get_current_user)):
     return current_user

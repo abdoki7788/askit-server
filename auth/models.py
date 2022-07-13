@@ -62,11 +62,5 @@ class User(Base):
             raise ValueError('Email must be a valid email address.')
         return email
     
-    @validates('about')
-    def validate_about(self, key, about):
-        if re.fullmatch(r"^[a-zA-Z0-9_.+-]{3,100}$", about) is None:
-            raise ValueError('About must be at least 3 characters long and contain only letters, numbers, underscores, and dashes.')
-        return about
-    
     def __str__(self) -> str:
         return super().__str__() + f"({self.username})"

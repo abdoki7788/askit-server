@@ -7,6 +7,13 @@ class User(BaseModel):
     full_name: Union[str, None] = None
     about: Union[str, None] = None
 
+class UserUpdate(BaseModel):
+    email: Union[str, None] = None
+    full_name: Union[str, None] = None
+    about: Union[str, None] = None
+    class Config:
+        orm_mode = True
+
 class UserResponse(User):
     id: int
 
