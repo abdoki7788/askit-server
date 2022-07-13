@@ -5,7 +5,7 @@ from . import crud, schemas, utils
 from auth.dependencies import oauth2_scheme, get_current_active_user
 from db_config import get_db
 
-routes = APIRouter(prefix="/topics")
+routes = APIRouter(prefix="/topics", tags=["topics"])
 
 @routes.post("", response_model=schemas.TopicResponse, status_code=201)
 def create_topic(topic: schemas.TopicCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):

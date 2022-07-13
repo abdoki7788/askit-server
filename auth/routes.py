@@ -8,7 +8,7 @@ from auth import schemas, crud, dependencies, utils
 from db_config import get_db
 import settings
 
-routes = APIRouter(prefix="/auth")
+routes = APIRouter(prefix="/auth", tags=["auth"])
 
 @routes.put("/users/me", response_model=schemas.UserMe)
 async def update_users_me(body: schemas.UserUpdate, current_user: schemas.UserCreate = Depends(dependencies.get_current_user), db: Session = Depends(get_db)):

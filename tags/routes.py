@@ -5,7 +5,7 @@ from db_config import get_db
 from . import crud, schemas
 from forum.schemas import TopicResponseInTag
 
-routes = APIRouter(prefix="/tags")
+routes = APIRouter(prefix="/tags", tags=["tags"])
 
 @routes.get("/", status_code=200, response_model=List[schemas.TagListResponse])
 def get_tags(db: Session = Depends(get_db)):
