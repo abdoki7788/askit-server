@@ -1,6 +1,6 @@
 from typing import List
 from fastapi.routing import APIRouter
-from fastapi import Depends, status, HTTPException
+from fastapi import Depends, UploadFile, status, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import timedelta
@@ -16,6 +16,14 @@ async def update_users_me(body: schemas.UserUpdate, current_user: schemas.UserCr
         return crud.update_user_me(db=db, user=current_user, user_in=body)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+@routes.post("/users/me/change_image", response_model=schemas.UserMe)
+async def update_users_me(file: UploadFile, current_user: schemas.UserCreate = Depends(dependencies.get_current_user), db: Session = Depends(get_db)):
+    url = utils.upload_image(file=file, current_user=current_user)
+    if url is not None:
+        return crud.update_user_me_image(db=db, user=current_user, image_url=url)
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="File type not allowed")
 
 @routes.get("/users/me", response_model=schemas.UserMe)
 async def get_users_me(current_user: schemas.UserCreate = Depends(dependencies.get_current_user)):

@@ -1,10 +1,11 @@
 import re
 from typing import Union
+from fastapi import HTTPException, UploadFile, Depends
 from jose import jwt
 from sqlalchemy.orm import Session
 from datetime import timedelta, datetime
 from passlib.context import CryptContext
-from auth import crud
+from auth import crud, schemas, dependencies
 import settings
 from db_config import get_db
 
@@ -37,3 +38,11 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.HASH_ALGORITHM)
     return encoded_jwt
+
+def upload_image(file: UploadFile, current_user: schemas.User = Depends(dependencies.get_current_user)):
+    if file.content_type.startswith("image/"):
+        with open(f"{settings.UPLOAD_DIR}{current_user.username}.{file.filename.split('.')[-1]}", 'wb+') as f:
+            f.write(file.file.read())
+        return f"/{settings.UPLOAD_DIR}{current_user.username}.{file.filename.split('.')[-1]}"
+    else:
+        raise None

@@ -73,3 +73,9 @@ def is_followed(db: Session, username: str, follower_username: str):
     if db_user is None:
         return None
     return db_follower in db_user.followers
+
+def update_user_me_image(db: Session, user, image_url: str):
+    user.image_url = image_url
+    db.commit()
+    db.refresh(user)
+    return user

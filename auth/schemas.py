@@ -16,12 +16,13 @@ class UserUpdate(BaseModel):
 
 class UserResponse(User):
     id: int
-
+    image_url: Union[str, None]
     class Config:
         orm_mode = True
 
 class UserProfile(User):
     id: int
+    image_url: Union[str, None]
     followers: List[UserResponse]
     following: List[UserResponse]
 
