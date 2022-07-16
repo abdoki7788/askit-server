@@ -38,7 +38,10 @@ def delete_topic(db: Session, topic_id: int):
 
 def voteup_topic(db: Session, topic_id: int, user):
     topic = get_topic(db, topic_id)
-    topic.votes.append(user)
+    if topic.creator_id != user.id:
+        topic.votes.append(user)
+    else:
+        raise HTTPException(status_code=403, detail="You can not voteup yourself")
     db.commit()
     return topic.votes
 
@@ -97,7 +100,10 @@ def create_answer(db: Session, answer: schemas.AnswerCreate, topic_id: int, crea
 
 def voteup_answer(db: Session, answer_id: int, user):
     answer = get_answer(db, answer_id)
-    answer.votes.append(user)
+    if answer.creator_id != user.id:
+        answer.votes.append(user)
+    else:
+        raise HTTPException(status_code=403, detail="You can not voteup yourself")
     db.commit()
     return answer.votes
 
