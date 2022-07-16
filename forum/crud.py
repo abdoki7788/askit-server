@@ -1,12 +1,13 @@
 from fastapi import HTTPException
+from slugify import slugify
 from sqlalchemy.orm import Session
 from . import models, schemas
 from auth import crud as auth_crud
 from tags.crud import get_or_create_tag
 import datetime
 
-def get_topic(db: Session, topic_id: int):
-    data = db.query(models.Topic).get(topic_id)
+def get_topic(db: Session, topic_id: int, topic_slug: str):
+    data = db.query(models.Topic).filter(models.Topic.id==topic_id, models.Topic.slug == topic_slug).first()
     if data is not None:
         return data
     else:
@@ -17,9 +18,8 @@ def get_topics(db: Session):
 
 def create_topic(db: Session, topic: schemas.TopicCreate, user_id: int):
     data = topic.dict()
-    print(data)
     data["tags"] = [get_or_create_tag(db, i) for i in topic.tags]
-    db_topic = models.Topic(**data, updated_at=datetime.datetime.now(), creator_id=user_id)
+    db_topic = models.Topic(**data, updated_at=datetime.datetime.now(), creator_id=user_id, slug=slugify(data["title"]))
     db.add(db_topic)
     db.commit()
     db.refresh(db_topic)

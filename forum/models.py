@@ -35,6 +35,7 @@ class Topic(Base):
     __table_args__ = (UniqueConstraint("title"),)
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255), nullable=False)
+    slug = Column(String(255), nullable=False, unique=True)
     content = Column(Text, nullable=False)
     votes = relationship("User", secondary=associate_topic_votes)
     creator_id = Column(Integer, ForeignKey('users.id'), nullable=False)

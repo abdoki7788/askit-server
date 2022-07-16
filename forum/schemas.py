@@ -18,6 +18,7 @@ from auth.schemas import UserResponse
 
 class TopicResponseInTag(TopicBase):
     id: int
+    slug: str
     creator: UserResponse
     votes: List[UserResponse]
     created_at: datetime.datetime
@@ -40,6 +41,7 @@ from tags.schemas import TagListResponse
 
 class TopicResponse(TopicBase):
     id: int
+    slug: str
     votes: List[UserResponse]
     tags: List[TagListResponse]
     answers: List[AnswerResponse]
@@ -52,6 +54,7 @@ class TopicResponse(TopicBase):
 
 class TopicListResponse(TopicBase):
     id: int
+    slug: str
     votes: List[UserResponse]
     tags: List[TagListResponse]
     creator: UserResponse
