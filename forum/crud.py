@@ -6,8 +6,8 @@ from auth import crud as auth_crud
 from tags.crud import get_or_create_tag
 import datetime
 
-def get_topic(db: Session, topic_id: int, topic_slug: str):
-    data = db.query(models.Topic).filter(models.Topic.id==topic_id, models.Topic.slug == topic_slug).first()
+def get_topic(db: Session, topic_id: int):
+    data = db.query(models.Topic).get(topic_id)
     if data is not None:
         return data
     else:

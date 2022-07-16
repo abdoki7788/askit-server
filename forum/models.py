@@ -32,7 +32,6 @@ class Answer(Base):
 
 class Topic(Base):
     __tablename__ = "topics"
-    __table_args__ = (UniqueConstraint("title"),)
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255), nullable=False)
     slug = Column(String(255), nullable=False, unique=True)
