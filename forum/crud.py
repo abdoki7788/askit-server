@@ -19,6 +19,9 @@ def get_topic_by_slug(db: Session, slug: str):
 def get_topics(db: Session):
     return db.query(models.Topic).all()
 
+def get_hot_topics(db: Session):
+    return db.query(models.Topic).filter(models.Topic.created_at > datetime.datetime.now() - datetime.timedelta(days=7)).limit(10).all()
+
 def create_topic(db: Session, topic: schemas.TopicCreate, user_id: int):
     data = topic.dict()
     data["tags"] = [get_or_create_tag(db, i) for i in topic.tags]

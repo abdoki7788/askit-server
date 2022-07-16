@@ -16,6 +16,10 @@ def create_topic(topic: schemas.TopicCreate, db: Session = Depends(get_db), toke
 def topics(db: Session = Depends(get_db)):
     return crud.get_topics(db=db)
 
+@routes.get("/hot", response_model=List[schemas.HotTopics])
+def hot_topics(db: Session = Depends(get_db)):
+    return crud.get_hot_topics(db=db)
+
 @routes.get("/{topic_id}", response_model=schemas.TopicResponse, status_code=200)
 def topic(topic_id: int, db: Session = Depends(get_db)):
     return crud.get_topic(db=db, topic_id=topic_id)

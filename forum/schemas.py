@@ -78,3 +78,11 @@ class TopicUpdate(TopicBase):
 
     class Config:
         orm_mode = True
+
+class HotTopics(TopicBase):
+    id: int
+    slug: str
+    creator: UserResponse
+
+    class Config:
+        orm_mode = True
