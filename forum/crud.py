@@ -47,10 +47,12 @@ def voteup_topic(db: Session, topic_id: int, user):
 
 def votedown_topic(db: Session, topic_id: int, user):
     topic = get_topic(db, topic_id)
-    if user in topic.votes:
+    if user in topic.votes and user.id != topic.creator_id:
         topic.votes.remove(user)
-    else:
+    elif user not in topic.votes:
         raise HTTPException(status_code=400, detail="User has not voted for this topic")
+    elif user.id == topic.creator_id:
+        raise HTTPException(status_code=403, detail="You can not votedown yourself")
     db.commit()
     return topic.votes
 
@@ -109,9 +111,11 @@ def voteup_answer(db: Session, answer_id: int, user):
 
 def votedown_answer(db: Session, answer_id: int, user):
     answer = get_answer(db, answer_id)
-    if user in answer.votes:
+    if user in answer.votes and user.id != answer.creator_id:
         answer.votes.remove(user)
-    else:
+    elif user not in answer.votes:
         raise HTTPException(status_code=400, detail="User has not voted for this answer")
+    elif user.id == answer.creator_id:
+        raise HTTPException(status_code=403, detail="You can not votedown yourself")
     db.commit()
     return answer.votes
