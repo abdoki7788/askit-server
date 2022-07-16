@@ -13,12 +13,17 @@ def get_topic(db: Session, topic_id: int):
     else:
         raise HTTPException(status_code=404, detail="Topic not found")
 
+def get_topic_by_slug(db: Session, slug: str):
+    return db.query(models.Topic).filter(models.Topic.slug == slug).first()
+
 def get_topics(db: Session):
     return db.query(models.Topic).all()
 
 def create_topic(db: Session, topic: schemas.TopicCreate, user_id: int):
     data = topic.dict()
     data["tags"] = [get_or_create_tag(db, i) for i in topic.tags]
+    if get_topic_by_slug(db, slugify(data["title"])):
+        raise HTTPException(status_code=400, detail="Topic with this title already exists")
     db_topic = models.Topic(**data, updated_at=datetime.datetime.now(), creator_id=user_id, slug=slugify(data["title"]))
     db.add(db_topic)
     db.commit()
