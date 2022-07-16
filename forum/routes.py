@@ -3,6 +3,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from . import crud, schemas, utils
 from auth.dependencies import oauth2_scheme, get_current_active_user
+from auth.schemas import UserVoteResponse
 from db_config import get_db
 
 routes = APIRouter(prefix="/topics", tags=["topics"])
@@ -33,11 +34,11 @@ def update_topic(topic_id: int, db: Session = Depends(get_db), topic: schemas.To
     else:
         raise HTTPException(status_code=400, detail="You are not the creator of this topic")
 
-@routes.patch("/{topic_id}/voteup", status_code=200)
+@routes.patch("/{topic_id}/voteup", status_code=200, response_model=List[UserVoteResponse])
 def voteup_topic(topic_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):
     return crud.voteup_topic(db=db, topic_id=topic_id, user=current_user)
 
-@routes.patch("/{topic_id}/votedown", status_code=200)
+@routes.patch("/{topic_id}/votedown", status_code=200, response_model=List[UserVoteResponse])
 def votedown_topic(topic_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):
     return crud.votedown_topic(db=db, topic_id=topic_id, user=current_user)
 
@@ -62,13 +63,13 @@ def topic_answers(topic_id: int, db: Session = Depends(get_db)):
     return crud.get_answers(db=db, topic_id=topic_id)
 
 @routes.get("/{topic_id}/answers/{answer_id}", response_model=List[schemas.AnswerResponse], status_code=200)
-def topic_answers(topic_id: int, answer_id: int, db: Session = Depends(get_db)):
+def topic_answer(topic_id: int, answer_id: int, db: Session = Depends(get_db)):
     return crud.get_answer(db=db, answer_id=answer_id)
 
-@routes.patch("/{topic_id}/answers/{answer_id}/voteup", status_code=200)
-def voteup_topic(topic_id: int, answer_id, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):
+@routes.patch("/{topic_id}/answers/{answer_id}/voteup", status_code=200, response_model=List[UserVoteResponse])
+def voteup_answer(topic_id: int, answer_id, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):
     return crud.voteup_answer(db=db, answer_id=answer_id, user=current_user)
 
-@routes.patch("/{topic_id}/answers/{answer_id}/votedown", status_code=200)
-def votedown_topic(topic_id: int, answer_id, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):
+@routes.patch("/{topic_id}/answers/{answer_id}/votedown", status_code=200, response_model=List[UserVoteResponse])
+def votedown_answer(topic_id: int, answer_id, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme), current_user: int = Depends(get_current_active_user)):
     return crud.votedown_answer(db=db, answer_id=answer_id, user=current_user)

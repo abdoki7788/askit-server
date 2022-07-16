@@ -28,6 +28,7 @@ class User(Base):
     disabled = Column(Boolean, default=False)
     hashed_password = Column(String, nullable=False)
     image_url = Column(String, nullable=True, default="/static/profile.jpeg")
+    score = Column(Integer, default=0)
     topics = relationship("Topic", back_populates="creator")
     answers = relationship("Answer", back_populates="creator")
     following = relationship(

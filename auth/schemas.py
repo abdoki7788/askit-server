@@ -7,6 +7,14 @@ class User(BaseModel):
     full_name: Union[str, None] = None
     about: Union[str, None] = None
 
+class UserVoteResponse(BaseModel):
+    username: str
+    email: Union[str, None] = None
+    full_name: Union[str, None] = None
+
+    class Config:
+        orm_mode = True
+
 class UserUpdate(BaseModel):
     email: Union[str, None] = None
     full_name: Union[str, None] = None
