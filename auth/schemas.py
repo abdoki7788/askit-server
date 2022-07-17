@@ -15,6 +15,14 @@ class UserVoteResponse(BaseModel):
     class Config:
         orm_mode = True
 
+class UserScoreResponse(BaseModel):
+    username: str
+    email: Union[str, None] = None
+    full_name: Union[str, None] = None
+    score: int
+    class Config:
+        orm_mode = True
+
 class UserUpdate(BaseModel):
     email: Union[str, None] = None
     full_name: Union[str, None] = None

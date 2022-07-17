@@ -79,3 +79,6 @@ def update_user_me_image(db: Session, user, image_url: str):
     db.commit()
     db.refresh(user)
     return user
+
+def get_best_users(db: Session):
+    return db.query(models.User).order_by(models.User.score.desc()).limit(8).all()

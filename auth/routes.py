@@ -33,6 +33,10 @@ async def get_users_me(current_user: schemas.UserCreate = Depends(dependencies.g
 async def get_users(db: Session = Depends(get_db)):
     return crud.get_users(db)
 
+@routes.get("/users/actives", response_model=List[schemas.UserScoreResponse])
+async def get_best_users(db: Session = Depends(get_db)):
+    return crud.get_best_users(db)
+
 @routes.get("/users/{username}", response_model=schemas.UserProfile)
 async def get_user(username: str, db: Session = Depends(get_db)):
     data = crud.get_user_by_username(db, username)
