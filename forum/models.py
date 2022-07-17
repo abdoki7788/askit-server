@@ -25,6 +25,7 @@ class Answer(Base):
     creator_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     creator = relationship("User", back_populates="answers")
     votes = relationship("User", secondary=associate_answer_votes)
+    votes_count = Column(Integer, default=0)
     topic_id = Column(Integer, ForeignKey('topics.id'))
     topic = relationship("Topic", back_populates="answers")
     created_at = Column(DateTime, default=datetime.datetime.now)
@@ -37,6 +38,7 @@ class Topic(Base):
     slug = Column(String(255), nullable=False, unique=True)
     content = Column(Text, nullable=False)
     votes = relationship("User", secondary=associate_topic_votes)
+    votes_count = Column(Integer, default=0)
     creator_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     tags = relationship(
         "Tag", secondary=association_table, back_populates="topics"

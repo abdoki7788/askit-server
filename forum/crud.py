@@ -20,7 +20,7 @@ def get_topics(db: Session):
     return db.query(models.Topic).all()
 
 def get_hot_topics(db: Session):
-    return db.query(models.Topic).filter(models.Topic.created_at > datetime.datetime.now() - datetime.timedelta(days=7)).limit(10).all()
+    return db.query(models.Topic).filter(models.Topic.created_at > datetime.datetime.now() - datetime.timedelta(days=7)).order_by(models.Topic.votes_count.desc()).limit(10).all()
 
 def create_topic(db: Session, topic: schemas.TopicCreate, user_id: int):
     data = topic.dict()
@@ -44,6 +44,7 @@ def voteup_topic(db: Session, topic_id: int, user):
     topic = get_topic(db, topic_id)
     if topic.creator_id != user.id and user not in topic.votes:
         topic.votes.append(user)
+        topic.votes_count += 1
         topic.creator.score += 10
     elif user.id == topic.creator_id:
         raise HTTPException(status_code=403, detail="You can not voteup yourself")
@@ -57,6 +58,7 @@ def votedown_topic(db: Session, topic_id: int, user):
     topic = get_topic(db, topic_id)
     if user in topic.votes and user.id != topic.creator_id:
         topic.votes.remove(user)
+        topic.votes_count -= 1
         topic.creator.score -= 10
     elif user not in topic.votes:
         raise HTTPException(status_code=400, detail="User has not voted for this topic")
@@ -114,6 +116,7 @@ def voteup_answer(db: Session, answer_id: int, user):
     answer = get_answer(db, answer_id)
     if answer.creator_id != user.id and user not in answer.votes:
         answer.votes.append(user)
+        answer.votes_count += 1
         answer.creator.score += 10
     elif user.id == answer.creator_id:
         raise HTTPException(status_code=403, detail="You can not voteup yourself")
@@ -126,6 +129,7 @@ def votedown_answer(db: Session, answer_id: int, user):
     answer = get_answer(db, answer_id)
     if user in answer.votes and user.id != answer.creator_id:
         answer.votes.remove(user)
+        answer.votes_count -= 1
         answer.creator.score -= 10
     elif user not in answer.votes:
         raise HTTPException(status_code=400, detail="User has not voted for this answer")
