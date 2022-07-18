@@ -64,8 +64,8 @@ def create_answer(topic_id: int, answer: schemas.AnswerCreate, db: Session = Dep
     return crud.create_answer(db=db, answer=answer, topic_id=topic_id, creator_id=current_user.id)
 
 @routes.get("/{topic_id}/answers", response_model=Page[schemas.AnswerResponse], status_code=200)
-def topic_answers(topic_id: int, db: Session = Depends(get_db)):
-    return crud.get_answers(db=db, topic_id=topic_id)
+def topic_answers(topic_id: int, db: Session = Depends(get_db), params: Params = Depends()):
+    return paginate(crud.get_answers(db=db, topic_id=topic_id), params)
 
 @routes.get("/{topic_id}/answers/{answer_id}", response_model=List[schemas.AnswerResponse], status_code=200)
 def topic_answer(topic_id: int, answer_id: int, db: Session = Depends(get_db)):
